@@ -30,11 +30,11 @@
         /**
          * @var Settings
          */
-        private Settings $settings;
+        private $client_settings;
         /**
          * @var Settings\AppInfo
          */
-        private Settings\AppInfo $app_info;
+        private $app_info;
 
         /**
          * @var mixed
@@ -44,7 +44,7 @@
         /**
          * @var API|null
          */
-        private ?API $madeline_proto;
+        private $madeline_proto;
 
         /**
          * @var mixed
@@ -57,6 +57,8 @@
          * @var mixed
          */
         private $authorization;
+
+        private string $session_path;
 
         /**
          * TgUserbot constructor.
@@ -75,16 +77,22 @@
             $this->client_config = $this->acm->getConfiguration('Client');
 
             // Define settings
-            $this->settings = new Settings;
-            $this->settings->getLogger()->setLevel(Logger::LOGGER_DEFAULT);
+            $this->client_settings = new Settings;
+            $this->client_settings->getLogger()->setLevel(Logger::LOGGER_DEFAULT);
 
             // Define Application Settings
             $this->app_info = new Settings\AppInfo();
-            $this->app_info->setApiId($this->app_config["app_id"]);
+            $this->app_info->setApiId((int)$this->app_config["app_id"]);
             $this->app_info->setApiHash($this->app_config["app_hash"]);
             $this->app_info->setDeviceModel("Intellivoid Userbot");
             $this->app_info->setSystemVersion("PPM " . PPM_VERSION);
-            $this->settings->setAppInfo($this->app_info);
+            $this->client_settings->setAppInfo($this->app_info);
+
+
+            if(file_exists($this->client_config["session_directory"]) == false)
+                mkdir($this->client_config["session_directory"]);
+
+            $this->session_path = $this->client_config["session_directory"] .DIRECTORY_SEPARATOR . $this->name;
         }
 
         /**
@@ -94,8 +102,7 @@
         {
             if($this->madeline_proto == null)
             {
-                $this->madeline_proto = new API($this->client_config["session_directory"] .DIRECTORY_SEPARATOR . $this->name, $this->settings);
-                $this->madeline_proto->stop();
+                $this->madeline_proto = new API($this->session_path, $this->client_settings);
             }
         }
 
@@ -106,9 +113,11 @@
          */
         public function authenticate(string $code=null)
         {
+            $this->initializeClient();
+
             if($this->madeline_proto->getAuthorization() !== MTProto::LOGGED_IN)
             {
-                $this->madeline_proto->phoneLogin(readline($this->client_config["phone_number"]));
+                $this->madeline_proto->phoneLogin($this->client_config["phone_number"]);
                 if($code == null)
                 {
                     $this->authorization = $this->madeline_proto->completePhoneLogin(readline("Verification Code: "));
@@ -123,16 +132,15 @@
                 {
                     $this->authorization = $this->madeline_proto->complete2falogin($this->client_config["2fa_password"]);
                 }
-                else
-                {
-                    print("Cannot login, this account isn't supported, " . $this->authorization["_"] . PHP_EOL);
-                    exit(1);
-                }
             }
         }
 
+        /**
+         * Starts the bot
+         */
         public function start()
         {
+            $this->authenticate();
             $this->madeline_proto->startAndLoop(MainEventHandler::class);
         }
 
