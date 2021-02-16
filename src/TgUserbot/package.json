@@ -1,0 +1,29 @@
+{
+    "package": {
+        "package_name": "net.intellivoid.tguserbot",
+        "name": "Telegram Userbot",
+        "version": "1.0.0.0",
+        "author": "Zi Xing Narrakas",
+        "organization": "Intellivoid Technologies",
+        "description": "A Telegram Userbot handler library",
+        "url": "https://github.com/intellivoid/tguserbot",
+        "dependencies": [],
+        "configuration": {
+            "autoload_method": "generated_spl",
+            "main": null,
+            "post_installation": [],
+            "pre_installation": []
+        }
+    },
+    "components": [
+        {
+            "required": true,
+            "file": "TgUserbot.php"
+        },
+        {
+            "required": true,
+            "file": "MainEventHandler.php"
+        }
+    ],
+    "files": []
+}
