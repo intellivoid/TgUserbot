@@ -1,0 +1,15 @@
+{
+  "command_configuration": {
+    "prefix": ".",
+    "generic_handler": "commands/generic_handler.php",
+    "commands": [
+      {
+        "name": "ping",
+        "namespace": "commands",
+        "class_name": "ping",
+        "remote_execution": true,
+        "file": "commands/ping.php"
+      }
+    ]
+  }
+}

@@ -31,12 +31,38 @@
     "components": [
         {
             "required": true,
+            "file": "Abstracts/CommandHandler.php"
+        },
+        {
+            "required": true,
             "file": "TgUserbot.php"
+        },
+        {
+            "required": true,
+            "file": "Exceptions/CommandNotFoundException.php"
+        },
+        {
+            "required": true,
+            "file": "Interfaces/CommandHandler.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/UserbotConfiguration/CommandConfiguration.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/UserbotConfiguration/Command.php"
+        },
+        {
+            "required": true,
+            "file": "Objects/UserbotConfiguration.php"
         },
         {
             "required": true,
             "file": "MainEventHandler.php"
         }
     ],
-    "files": []
+    "files": [
+        "package.json"
+    ]
 }

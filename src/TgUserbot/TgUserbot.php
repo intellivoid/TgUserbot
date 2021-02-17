@@ -10,6 +10,8 @@
     use danog\MadelineProto\Logger;
     use danog\MadelineProto\MTProto;
     use danog\MadelineProto\Settings;
+    use TgUserbot\Objects\UserbotConfiguration;
+    use TgUserbot\Objects\UserbotConfiguration\Command;
 
     /**
      * Class TgUserbot
@@ -58,7 +60,15 @@
          */
         private $authorization;
 
+        /**
+         * @var string
+         */
         private string $session_path;
+
+        /**
+         * @var UserbotConfiguration|null
+         */
+        public static $UserbotConfiguration;
 
         /**
          * TgUserbot constructor.
@@ -93,6 +103,23 @@
                 mkdir($this->client_config["session_directory"]);
 
             $this->session_path = $this->client_config["session_directory"] .DIRECTORY_SEPARATOR . $this->name;
+        }
+
+        /**
+         * @param string $path
+         * @param string $directory
+         */
+        public function loadConfiguration(string $path, string $directory)
+        {
+            self::$UserbotConfiguration = UserbotConfiguration::fromArray(json_decode(file_get_contents($path), true), $directory);
+        }
+
+        /**
+         * @return UserbotConfiguration|null
+         */
+        public function getUserbotConfiguration(): ?UserbotConfiguration
+        {
+            return self::$UserbotConfiguration;
         }
 
         /**
@@ -144,6 +171,7 @@
             $this->madeline_proto->startAndLoop(MainEventHandler::class);
         }
 
+
         /**
          * AutoConfigures ACM
          */
@@ -168,4 +196,5 @@
         {
             return $this->name;
         }
+
     }
