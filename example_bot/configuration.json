@@ -1,8 +1,13 @@
 {
   "command_configuration": {
     "prefix": ".",
-    "generic_handler": "commands/generic_handler.php",
     "commands": [
+      {
+        "name": "*",
+        "namespace": "commands",
+        "class_name": "generic_handler",
+        "file": "commands/generic_handler.php"
+      },
       {
         "name": "ping",
         "namespace": "commands",
