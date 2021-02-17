@@ -7,7 +7,7 @@
         "name": "ping",
         "namespace": "commands",
         "class_name": "ping",
-        "remote_execution": true,
+        "remote_execution": false,
         "file": "commands/ping.php"
       }
     ]

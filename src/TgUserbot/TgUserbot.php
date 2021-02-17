@@ -71,6 +71,11 @@
         public static $UserbotConfiguration;
 
         /**
+         * @var array|null
+         */
+        private static $SelfUser;
+
+        /**
          * TgUserbot constructor.
          * @param string $name
          * @throws \Exception
@@ -103,6 +108,14 @@
                 mkdir($this->client_config["session_directory"]);
 
             $this->session_path = $this->client_config["session_directory"] .DIRECTORY_SEPARATOR . $this->name;
+        }
+
+        /**
+         * @return array|null
+         */
+        public static function getSelfUser(): ?array
+        {
+            return self::$SelfUser;
         }
 
         /**
@@ -168,7 +181,11 @@
         public function start()
         {
             $this->authenticate();
-            $this->madeline_proto->startAndLoop(MainEventHandler::class);
+            $this->madeline_proto->start();
+
+            self::$SelfUser = $this->madeline_proto->getSelf();
+
+            $this->madeline_proto->loop(MainEventHandler::class);
         }
 
 

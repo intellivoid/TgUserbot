@@ -35,6 +35,10 @@
         },
         {
             "required": true,
+            "file": "Classes/Helper.php"
+        },
+        {
+            "required": true,
             "file": "TgUserbot.php"
         },
         {

@@ -37,14 +37,31 @@
             if(substr($update["message"]["message"], 0, 1) == TgUserbot::$UserbotConfiguration->CommandConfiguration->Prefix)
             {
                 $CommandInput = explode(" ", $update["message"]["message"], 1)[0];
+
                 try
                 {
                     $Command = TgUserbot::$UserbotConfiguration->CommandConfiguration->findCommand($CommandInput);
-                    $Command->execute($update, $this, $this->API);
                 }
                 catch(CommandNotFoundException $e)
                 {
-                    unset($e);
+                    return;
+                }
+
+                if($Command->AllowRemoteExecution == false)
+                {
+                    if($update["message"]["out"] == false)
+                    {
+                        return;
+                    }
+
+                    $Command->execute($update, $this, $this->API);
+                }
+                else
+                {
+                    if($update["message"]["from_id"]["_"] == "peerUser")
+                    {
+                        $Command->execute($update, $this, $this->API);;
+                    }
                 }
             }
         }

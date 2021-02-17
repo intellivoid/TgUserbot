@@ -2,6 +2,7 @@
 
     namespace commands;
 
+    use TgUserbot\Classes\Helper;
     use TgUserbot\Interfaces\CommandHandler;
 
     /**
@@ -15,10 +16,7 @@
          */
         public function execute()
         {
-            $this->mainEventHandler->messages->editMessage([
-                "id" => $this->update["message"]["id"],
-                "peer" => $this->update["message"]["peer_id"],
-                "message" => "Pong!"
-            ]);
+            var_dump($this->update);
+            Helper::answerCommand($this->mainEventHandler, $this->update, "Pong!");
         }
     }
