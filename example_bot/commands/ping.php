@@ -16,7 +16,6 @@
          */
         public function execute()
         {
-            var_dump($this->update);
             Helper::answerCommand($this->mainEventHandler, $this->update, "Pong!");
         }
     }

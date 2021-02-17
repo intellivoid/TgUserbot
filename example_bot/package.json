@@ -1,0 +1,39 @@
+{
+    "package": {
+        "package_name": "net.intellivoid.example_userbot",
+        "name": "example_userbot",
+        "version": "1.0.0.0",
+        "author": "Zi Xing narrakas",
+        "organization": null,
+        "description": "Example userbot",
+        "url": null,
+        "dependencies": [],
+        "configuration": {
+            "autoload_method": "generated_spl",
+            "main": {
+                "execution_point": "bot.php",
+                "create_symlink": true,
+                "name": "example_userbot"
+            },
+            "post_installation": [],
+            "pre_installation": []
+        }
+    },
+    "components": [
+        {
+            "required": true,
+            "file": "bot.php"
+        },
+        {
+            "required": true,
+            "file": "commands/ping.php"
+        },
+        {
+            "required": true,
+            "file": "commands/generic_handler.php"
+        }
+    ],
+    "files": [
+        "configuration.json"
+    ]
+}

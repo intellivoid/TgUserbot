@@ -37,6 +37,7 @@
             if(substr($update["message"]["message"], 0, 1) == TgUserbot::$UserbotConfiguration->CommandConfiguration->Prefix)
             {
                 $CommandInput = explode(" ", $update["message"]["message"], 1)[0];
+                $Command = null;
 
                 try
                 {
@@ -44,24 +45,41 @@
                 }
                 catch(CommandNotFoundException $e)
                 {
-                    return;
+                    unset($e);
                 }
 
-                if($Command->AllowRemoteExecution == false)
+                if($Command !== null)
                 {
-                    if($update["message"]["out"] == false)
+                    if($Command->AllowRemoteExecution == false)
                     {
-                        return;
+                        if($update["message"]["out"] == true)
+                        {
+                            $Command->execute($update, $this, $this->API);
+                            return;
+                        }
                     }
-
-                    $Command->execute($update, $this, $this->API);
+                    else
+                    {
+                        if($update["message"]["from_id"]["_"] == "peerUser")
+                        {
+                            $Command->execute($update, $this, $this->API);
+                            return;
+                        }
+                    }
                 }
-                else
+            }
+
+            if($update["message"]["out"] == false)
+            {
+                try
                 {
-                    if($update["message"]["from_id"]["_"] == "peerUser")
-                    {
-                        $Command->execute($update, $this, $this->API);;
-                    }
+                    // Generic command
+                    $Command = TgUserbot::$UserbotConfiguration->CommandConfiguration->findCommand("*");
+                    $Command->execute($update, $this, $this->API);;
+                }
+                catch(CommandNotFoundException $e)
+                {
+                    unset($e);
                 }
             }
         }
