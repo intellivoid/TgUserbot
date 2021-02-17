@@ -37,7 +37,6 @@
             if(substr($update["message"]["message"], 0, 1) == TgUserbot::$UserbotConfiguration->CommandConfiguration->Prefix)
             {
                 $CommandInput = explode(" ", $update["message"]["message"], 1)[0];
-                $Command = null;
 
                 try
                 {
@@ -45,41 +44,24 @@
                 }
                 catch(CommandNotFoundException $e)
                 {
-                    unset($e);
+                    return;
                 }
 
-                if($Command !== null)
+                if($Command->AllowRemoteExecution == false)
                 {
-                    if($Command->AllowRemoteExecution == false)
+                    if($update["message"]["out"] == false)
                     {
-                        if($update["message"]["out"] == true)
-                        {
-                            $Command->execute($update, $this, $this->API);
-                            return;
-                        }
+                        return;
                     }
-                    else
-                    {
-                        if($update["message"]["from_id"]["_"] == "peerUser")
-                        {
-                            $Command->execute($update, $this, $this->API);
-                            return;
-                        }
-                    }
-                }
-            }
 
-            if($update["message"]["out"] == false)
-            {
-                try
-                {
-                    // Generic command
-                    $Command = TgUserbot::$UserbotConfiguration->CommandConfiguration->findCommand("*");
-                    $Command->execute($update, $this, $this->API);;
+                    $Command->execute($update, $this, $this->API);
                 }
-                catch(CommandNotFoundException $e)
+                else
                 {
-                    unset($e);
+                    if($update["message"]["from_id"]["_"] == "peerUser")
+                    {
+                        $Command->execute($update, $this, $this->API);;
+                    }
                 }
             }
         }
